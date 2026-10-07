@@ -1,0 +1,36 @@
+✔ known correct synthetic control PASS, optional absence allowed (2.063084ms)
+✔ language mutation invalidates bound QA and FAILS (0.46784ms)
+✔ lemma mutation invalidates bound QA and FAILS (1.365992ms)
+✔ POS mutation invalidates bound QA and FAILS (0.304313ms)
+✔ sense mutation invalidates bound QA and FAILS (0.359698ms)
+✔ localization mutation invalidates bound QA and FAILS (0.319852ms)
+✔ morphology mutation invalidates bound QA and FAILS (0.328078ms)
+✔ translation mutation invalidates bound QA and FAILS (0.273395ms)
+✔ example mutation invalidates bound QA and FAILS (0.384474ms)
+✔ AI_GENERATED without independent QA cannot pass (0.470195ms)
+✔ missing explicit critical confirmation cannot pass (0.352845ms)
+✔ matching exact QA cannot hide marked semantic conflict (0.372051ms)
+✔ missing mechanical identity restored, extras archived, raw unchanged (2.578414ms)
+✔ conflicting word ID and unbound sense rejected (0.961961ms)
+✔ missing semantic localization is not invented (0.666395ms)
+✔ evidence-only separated, mixed semantic finding retained (0.83409ms)
+✔ missing morphology and POS or example conflicts cannot disappear with evidence finding (0.430961ms)
+✔ more than eight senses stays rejected without crashing (2.51774ms)
+✔ disjoint serialization fragments recovered without changing gloss or raw (3.243977ms)
+✔ conflicting fragments not coalesced (0.65343ms)
+✔ ordered staging ID fills omission but not semantic gaps (0.998761ms)
+✔ exact sentence locale translations reused without inventing text (2.852971ms)
+✔ conflicting sentence translations never reused (1.523448ms)
+✔ missing single field patch only; originals and IDs preserved (2.312273ms)
+✔ identity and full-card replacement forbidden (0.627181ms)
+✔ unconfirmed broad target and wrong precondition refused (0.357473ms)
+✔ duplicate patch and invented sense rejected (0.395845ms)
+✔ declined sense patch blocks dependent translation but not independent field (0.479873ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 162.724939
