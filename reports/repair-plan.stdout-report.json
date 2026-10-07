@@ -1,0 +1,74 @@
+{
+  "processed": 100,
+  "structuralPass": 40,
+  "structuralFail": 60,
+  "deterministicRepairOperations": 848,
+  "repairPlanFieldTargets": 1473,
+  "confirmedMissingFields": 955,
+  "qaReviewTargets": 506,
+  "identityReviewTargets": 12,
+  "breakdown": {
+    "DE morphology": {
+      "fields": 9,
+      "confirmedMissing": 0,
+      "qaReviewTargets": 9,
+      "identityReview": 0
+    },
+    "sense": {
+      "fields": 180,
+      "confirmedMissing": 0,
+      "qaReviewTargets": 180,
+      "identityReview": 0
+    },
+    "ru": {
+      "fields": 249,
+      "confirmedMissing": 158,
+      "qaReviewTargets": 91,
+      "identityReview": 0
+    },
+    "uk": {
+      "fields": 246,
+      "confirmedMissing": 160,
+      "qaReviewTargets": 86,
+      "identityReview": 0
+    },
+    "az": {
+      "fields": 242,
+      "confirmedMissing": 160,
+      "qaReviewTargets": 82,
+      "identityReview": 0
+    },
+    "examples": {
+      "fields": 535,
+      "confirmedMissing": 477,
+      "qaReviewTargets": 58,
+      "identityReview": 0
+    },
+    "identity": {
+      "fields": 12,
+      "confirmedMissing": 0,
+      "qaReviewTargets": 0,
+      "identityReview": 12
+    }
+  },
+  "semanticRepairCandidateCards": 81,
+  "forecast": {
+    "generationRepairCalls": 81,
+    "separateQaCalls": 81,
+    "total": 162,
+    "retries": 0,
+    "basis": "Upper-bound one field-scoped repair request + one separate QA request per affected card; identity holds must be resolved before execution; not full generation"
+  },
+  "lemmaPosSourceRows": 100,
+  "lemmaPosIndependentlyVerified": 0,
+  "newApiRequests": 0,
+  "rawLedgerSha": "4fdfea937b9aeac0b8c6effbe3f7660577cbe33c459944f509060aa6ee7ae8f4",
+  "inputSha": "770036cbff3f0b40856cecdeefef4b734f22310376a85ea36129ed08a1d5b905",
+  "limitations": [
+    "Broad saved QA findings expand to review targets, not proof every expanded field is incorrect.",
+    "Missing optional values are untouched.",
+    "No new lexical or sense identity is approved.",
+    "Model version cannot be reconstructed from a corpus provenance label.",
+    "No admission gate or v2 schema changed."
+  ]
+}

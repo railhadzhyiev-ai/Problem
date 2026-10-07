@@ -214,5 +214,37 @@
       "byteExact": true,
       "sha256": "9b00a4158bbfb00671618d1c586bc01352a748b30e28cf7a6e9344735b23b653"
     }
+  ],
+  "reportExcerpts": [
+    {
+      "path": "reports/offline-replay.stdout-report.json",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "sourceRunId": 37550962140,
+      "sourceJobId": 112566068054,
+      "source": "Exact JSON stdout report extracted from completed job log; timestamps outside the JSON removed. Artifact report file has not yet been unpacked.",
+      "rawJobLogSha256": "9e4b7240ca9796f251f4188c9164e6f022af7a40a8c13d108fa364c72642a059",
+      "sha256": "1bed799fc78a77ea5f2f00b1e334a46b45446bb0df5642e14c92a565617ea222",
+      "gitTrackedAtSource": false
+    },
+    {
+      "path": "reports/repair-plan.stdout-report.json",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "sourceRunId": 37550962140,
+      "sourceJobId": 112566068054,
+      "source": "Exact JSON stdout report extracted from completed job log; timestamps outside the JSON removed. Artifact report file has not yet been unpacked.",
+      "rawJobLogSha256": "9e4b7240ca9796f251f4188c9164e6f022af7a40a8c13d108fa364c72642a059",
+      "sha256": "e4f2b282723b36d6218290775f1c9f81c5db484b89fd9ce8d7340a7ca7137ab6",
+      "gitTrackedAtSource": false
+    },
+    {
+      "path": "reports/latest-field-repair.stdout-report.json",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "sourceRunId": 37550962140,
+      "sourceJobId": 112566068054,
+      "source": "Exact JSON stdout report extracted from completed job log; timestamps outside the JSON removed. Artifact report file has not yet been unpacked.",
+      "rawJobLogSha256": "9e4b7240ca9796f251f4188c9164e6f022af7a40a8c13d108fa364c72642a059",
+      "sha256": "4748f2b2877a2b7211b7fc814ad405933f5db16e4c43b0c3804747f71f743f0a",
+      "gitTrackedAtSource": false
+    }
   ]
 }

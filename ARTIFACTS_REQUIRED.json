@@ -10,9 +10,16 @@
   },
   "latestFieldRepair": {
     "runId": 37550962140,
+    "jobId": 112566068054,
     "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
-    "statusObserved": "in_progress",
-    "savedArtifactObserved": false
+    "statusObserved": "completed",
+    "conclusion": "success",
+    "artifactId": 11453987714,
+    "name": "canonicalword-field-repair-v1-37550962140",
+    "archiveSha256": "e1d9821ab1ebf4b461f25b4865080d607f3ec042dbe74b13674d77944759853c",
+    "savedArtifactObserved": true,
+    "imported": false,
+    "stdoutReportIncluded": true
   },
   "pending": [
     "outputs/canonicalword-de100-result/data/ledger.json",
