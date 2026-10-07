@@ -1,0 +1,203 @@
+name: Build immutable diagnostic snapshot
+on:
+  push:
+    paths:
+      - .github/workflows/build-diagnostic-snapshot.yml
+permissions:
+  contents: write
+  actions: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Copy exact source and saved artifacts; verify offline
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: python
+        run: |
+          import os,json,urllib.request,urllib.parse,base64,hashlib,zipfile,io,pathlib,subprocess,re,datetime
+          ROOT=pathlib.Path.cwd()
+          SRC="railhadzhyiev-ai/german-learning-app-v2"
+          SHA="bc4a3da6045daa3314f6c02fb0b955dfd41b570c"
+          FILES=["backend/benchmark/canonicalword-ai-pilot-v1/staging-v2.mjs","backend/benchmark/canonicalword-ai-pilot-v1/replay-v2.mjs","backend/benchmark/canonicalword-ai-pilot-v1/deterministic-repair-v2.mjs","backend/benchmark/canonicalword-ai-pilot-v1/ai-admission-shadow-v1.mjs","backend/benchmark/canonicalword-ai-pilot-v1/field-repair-v1.mjs","backend/benchmark/canonicalword-ai-pilot-v1/input-lock.v1.json","backend/benchmark/canonicalword-ai-pilot-v1/pilot-input.v1.jsonl","backend/benchmark/canonicalword-ai-pilot-v1/checksums.v1.sha256","backend/scripts/canonicalword-wire-v2-offline-replay.mjs","backend/scripts/canonicalword-repair-plan-v1.mjs","backend/scripts/ai-admission-shadow-v1.mjs","backend/test/canonicalword-replay-v2.test.mjs","backend/test/deterministic-repair-v2.test.mjs","backend/test/ai-admission-shadow-v1.test.mjs","backend/test/field-repair-v1.test.mjs","lib/features/words/data/canonical_word_contract.dart","lib/features/words/domain/canonical_word.dart","lib/features/words/domain/grammatical_gender.dart","docs/AI_ADMISSION_SHADOW_V1.md","docs/CANONICALWORD_WIRE_V2_AI_PILOT.md","docs/CANONICALWORD_FIELD_REPAIR_V1.md"]
+          API='https://api.github.com/repos/'+SRC
+          manifest={'snapshotSourceCommit':SHA,'sourceRepository':SRC,'sourceBranch':'codex/canonicalword-wire-v2-ai-pilot-v1','capturedAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'sourceFiles':[],'artifactFiles':[],'derivedFiles':[]}
+          def request(url):
+              req=urllib.request.Request(url,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','User-Agent':'diagnostic-snapshot'})
+              with urllib.request.urlopen(req,timeout=60) as r:return r.read()
+          def api(path):return json.loads(request(API+path))
+          def digest(b):return hashlib.sha256(b).hexdigest()
+          def put(path,b):
+              p=ROOT/path;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b)
+          def source(path):
+              obj=api('/contents/'+path+'?ref='+SHA)
+              b=base64.b64decode(obj['content'])
+              history=api('/commits?sha='+SHA+'&path='+urllib.parse.quote(path,safe='')+'&per_page=1')
+              put(path,b)
+              manifest['sourceFiles'].append({'path':path,'sourcePath':path,'sourceCommitSha':SHA,'lastChangeCommitSha':history[0]['sha'],'gitBlobSha':obj['sha'],'sha256':digest(b),'bytes':len(b),'byteExact':True})
+          for path in FILES:source(path)
+          def artifact(run_id,expected_name,destination,required=False):
+              arts=api('/actions/runs/'+str(run_id)+'/artifacts')['artifacts']
+              matches=[a for a in arts if a['name']==expected_name and not a['expired']]
+              if not matches:
+                  if required:raise RuntimeError('Required original artifact unavailable')
+                  return False
+              a=matches[0]; raw=request(API+'/actions/artifacts/'+str(a['id'])+'/zip')
+              if a.get('digest') and a['digest']!='sha256:'+digest(raw):raise RuntimeError('Artifact archive digest mismatch')
+              if len(raw)>20*1024*1024:raise RuntimeError('Archive exceeds bounded diagnostic scope')
+              with zipfile.ZipFile(io.BytesIO(raw)) as z:
+                  for info in z.infolist():
+                      if info.is_dir():continue
+                      p=pathlib.PurePosixPath(info.filename)
+                      if p.is_absolute() or '..' in p.parts:raise RuntimeError('Invalid artifact path')
+                      if info.file_size>15*1024*1024:raise RuntimeError('Unbounded artifact file')
+                      if p.suffix not in ('.json','.jsonl','.sha256') or any(x.startswith('.') for x in p.parts):raise RuntimeError('Unexpected artifact file type')
+                      b=z.read(info);b.decode('utf-8')
+                      path=destination+'/'+str(p);put(path,b)
+                      manifest['artifactFiles'].append({'path':path,'artifactMember':str(p),'sourceCommitSha':a['workflow_run']['head_sha'],'sourceRunId':run_id,'artifactId':a['id'],'artifactName':a['name'],'archiveSha256':digest(raw),'sha256':digest(b),'bytes':len(b),'byteExact':True,'commitNote':'Artifact is not a Git-tracked file; sourceCommitSha identifies producing workflow code, not a fabricated per-file commit.'})
+              checks=ROOT/destination/'checksums.sha256'
+              if not checks.exists():raise RuntimeError('Missing artifact checksums')
+              for line in checks.read_text().strip().splitlines():
+                  h,n=line.split(None,1)
+                  p=pathlib.PurePosixPath(n.strip())
+                  if p.is_absolute() or '..' in p.parts:raise RuntimeError('Invalid checksum path')
+                  if digest((ROOT/destination/str(p)).read_bytes())!=h:raise RuntimeError('Artifact member checksum mismatch')
+              return True
+          artifact(37546161114,'canonicalword-de100-wire-v2-37546161114','outputs/canonicalword-de100-result/data',True)
+          latest=api('/actions/runs/37550962140')
+          manifest['latestFieldRepairRun']={'runId':37550962140,'commitSha':latest['head_sha'],'status':latest['status'],'conclusion':latest['conclusion'],'observedAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          if latest['status']=='completed':
+              manifest['latestFieldRepairRun']['savedArtifactIncluded']=artifact(37550962140,'canonicalword-field-repair-v1-37550962140','outputs/canonicalword-field-repair-v1')
+          else:manifest['latestFieldRepairRun']['savedArtifactIncluded']=False
+          # Only local saved-data validators execute; no live provider runner is copied or invoked.
+          tests=['backend/test/canonicalword-replay-v2.test.mjs','backend/test/deterministic-repair-v2.test.mjs','backend/test/ai-admission-shadow-v1.test.mjs','backend/test/field-repair-v1.test.mjs']
+          result=subprocess.run(['node','--test']+tests,capture_output=True,text=True,check=True)
+          put('reports/validator-controls.tap',result.stdout.encode())
+          for script in ['canonicalword-wire-v2-offline-replay.mjs','canonicalword-repair-plan-v1.mjs','ai-admission-shadow-v1.mjs']:
+              subprocess.run(['node','backend/scripts/'+script],check=True,stdout=subprocess.DEVNULL)
+          for folder in ['canonicalword-de100-offline-replay','canonicalword-repair-plan-v1','ai-admission-shadow-v1']:
+              for p in sorted((ROOT/'outputs'/folder).iterdir()):
+                  if p.is_file():manifest['derivedFiles'].append({'path':str(p.relative_to(ROOT)),'sourceCommitSha':SHA,'rawArtifactRunId':37546161114,'sha256':digest(p.read_bytes()),'bytes':p.stat().st_size,'derivation':'Existing offline script; zero model API calls. Not a previously Git-tracked report.'})
+          # Recorded snapshot integrity checker; independent from copied source validators.
+          verify="""import json,hashlib,pathlib
+          root=pathlib.Path(__file__).resolve().parent
+          m=json.loads((root/'PROVENANCE.json').read_text())
+          for entry in m['sourceFiles']+m['artifactFiles']+m['derivedFiles']:
+              p=root/entry['path']
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==entry['sha256'], 'Snapshot drift: '+entry['path']
+          for line in (root/'SNAPSHOT.sha256').read_text().splitlines():
+              h,n=line.split(None,1)
+              assert hashlib.sha256((root/n.strip()).read_bytes()).hexdigest()==h, 'Snapshot drift: '+n
+          print('Snapshot hashes verified')
+          """
+          put('verify_snapshot.py',verify.encode())
+          repro="""#!/bin/sh
+          set -eu
+          cd "$(dirname "$0")"
+          python3 verify_snapshot.py
+          snapshot_root="$PWD"
+          diagnostic_work=$(mktemp -d)
+          trap 'rm -rf "$diagnostic_work"' EXIT HUP INT TERM
+          cp -R backend lib outputs "$diagnostic_work/"
+          cd "$diagnostic_work"
+          node --test backend/test/canonicalword-replay-v2.test.mjs backend/test/deterministic-repair-v2.test.mjs backend/test/ai-admission-shadow-v1.test.mjs backend/test/field-repair-v1.test.mjs
+          node backend/scripts/canonicalword-wire-v2-offline-replay.mjs
+          node backend/scripts/canonicalword-repair-plan-v1.mjs
+          node backend/scripts/ai-admission-shadow-v1.mjs
+          for diagnostic_folder in canonicalword-de100-offline-replay canonicalword-repair-plan-v1 ai-admission-shadow-v1; do
+              diff -r "$snapshot_root/outputs/$diagnostic_folder" "outputs/$diagnostic_folder"
+          done
+          echo "Offline validators and deterministic report reproduction PASS"
+          """
+          put('REPRODUCE.sh',repro.encode())
+          raw_report=json.loads((ROOT/'outputs/canonicalword-de100-result/data/report.json').read_text())
+          replay=json.loads((ROOT/'outputs/canonicalword-de100-offline-replay/report.json').read_text())
+          plan=json.loads((ROOT/'outputs/canonicalword-repair-plan-v1/report.json').read_text())
+          shadow=json.loads((ROOT/'outputs/ai-admission-shadow-v1/report.json').read_text())
+          metrics=[('Frozen DE records',shadow['processed']),('Original evidence gate PASS',shadow['oldPass']),('Raw structural defects',shadow['rawStructuralDefectCards']),('Saved QA language/semantic finding cards',shadow['savedQaLanguageOrSemanticFindingCards']),('Raw cards blocked only by evidence',shadow['rawBlockedOnlyByEvidence']),('Previous technical projection language PASS',shadow['previousTechnicalProjectionLanguagePass']),('Deterministic projection structural PASS',plan['structuralPass']),('Deterministic projection structural FAIL',plan['structuralFail']),('Repair-plan field targets',plan['repairPlanFieldTargets']),('Confirmed missing fields',plan['confirmedMissingFields']),('Shadow PASS',shadow['newShadowPass']),('Shadow CONFLICT',shadow['conflict']),('Shadow INCOMPLETE',shadow['incomplete']),('Shadow QUARANTINE_CANDIDATE',shadow['quarantineCandidate']),('Missing positive critical confirmation',shadow['criticalPositiveConfirmationMissing']),('Independent lemma/POS verified rows',plan['lemmaPosIndependentlyVerified']),('Admission-ready after offline replay',replay['admissionReady']),('Canonical admitted',shadow['canonicalAdmitted']),('New model API requests for snapshot',0)]
+          table='\n'.join('| '+k+' | '+str(v)+' |' for k,v in metrics)
+          status=manifest['latestFieldRepairRun']
+          readme=f"""# DE word-pipeline diagnostic snapshot
+          
+          Frozen read-only diagnostic snapshot. Source code commit: `{SHA}`; branch: `codex/canonicalword-wire-v2-ai-pilot-v1`. Captured at {manifest['capturedAtUtc']}.
+          Source repository identity and per-file provenance are in [PROVENANCE.json](PROVENANCE.json).
+          
+          ## Problem
+          
+          Why do AI-generated candidates fail to reach verified/admission state even after deterministic wire-contract v2 repair and separate AI QA?
+          
+          Evaluate structural validity, semantic correctness, explicit positive critical-field confirmation, exact-card QA binding, independent source evidence and canonical admission separately.
+          The saved broad second-model QA mixes evidence findings with language findings. Offline classification cannot supply missing positive lemma/POS confirmation. Frozen corpus/NLP selection is selection provenance, not independent lexical truth.
+          `SHADOW_PASS != CANONICAL_ADMITTED`. Staging identifiers are rejected by the existing canonical contract. This snapshot changes no gate, source evidence, schema or canonical policy.
+          
+          ## Current metrics
+          
+          | Metric | Count |
+          | --- | ---: |
+          {table}
+          
+          Metrics are measured from the original saved 100 generated envelopes using the copied offline scripts. The older technical replay and stricter deterministic REPAIR_PLAN projection are distinct artifacts; do not treat their QA as a new model assessment.
+          Generation/usage/cost and original QA verdicts remain in [original report](outputs/canonicalword-de100-result/data/report.json) and [immutable ledger](outputs/canonicalword-de100-result/data/ledger.json).
+          Additional measurements: [shadow](outputs/ai-admission-shadow-v1/report.json), [replay](outputs/canonicalword-de100-offline-replay/report.json), [repair plan](outputs/canonicalword-repair-plan-v1/report.json).
+          
+          ## Latest state and limitations
+          
+          Original generation artifact: run `37546161114`, producing commit `2999476c9fdc2b5a3364d90c73a6dde643368f07`.
+          The latest field-repair run `37550962140` was `{status['status']}` (conclusion: `{status['conclusion']}`) when checked. Saved latest artifact included: `{status['savedArtifactIncluded']}`.
+          An unfinished run has no final QA report and is not claimed as completed verification. This frozen snapshot does not follow future runs automatically.
+          
+          Original generation output is copied byte-for-byte with the archive digest and member hashes. Offline REPAIR_PLAN, deterministic projection and shadow reports are regenerated from those immutable bytes with the actual current scripts; their provenance explicitly identifies derivation rather than inventing source-file commits.
+          [REPAIR_PLAN.json](outputs/canonicalword-repair-plan-v1/REPAIR_PLAN.json) includes deterministically repaired cards, operations and holds; [lemma/POS provenance](outputs/canonicalword-repair-plan-v1/lemma-pos-provenance.json) records independent-verification limits.
+          Control tests prove refusal and exact-card binding, not general linguistic accuracy. Counts embedded in the shadow script are checked against the recorded actual test run in [validator-controls.tap](reports/validator-controls.tap).
+          
+          ## Reproduce without model API calls
+          
+          Prerequisites: Node.js 24, Python 3, POSIX shell, `cp`, `diff`. No dependency installation, API key, .env, database or provider SDK is needed.
+          
+          ```sh
+          sh REPRODUCE.sh
+          ```
+          
+          This verifies all snapshot hashes, runs the existing offline controls, reproduces the three reports in a temporary directory and compares every output byte to the snapshot. The checkout remains unchanged. After cloning, the command can run with networking disabled.
+          
+          The Dart files are the actual wire-contract v2 and its direct model dependency, included for inspection. Reproduction uses the existing Node staging/shadow validators, not a substituted contract or a Flutter runtime build.
+          
+          ## Snapshot scope
+          
+          Only the actual frozen 100 DE input, locks/checksums, wire contract, offline validators/gates and direct controls/dependencies, original saved generation/QA output, deterministic repaired projection, REPAIR_PLAN and QA/shadow reports are included.
+          No raw corpus, application runtime/UI, unrelated backend, live generation runner, deployment workflow, secrets, .env, API keys or credentials are included in the final tree.
+          
+          All copied source files have the source commit, last-change commit, Git blob SHA and SHA-256 in PROVENANCE.json. Non-Git artifacts instead identify their producing workflow commit/run and archive/member hashes. Derived files identify the precise code and input artifacts.
+          This is a frozen snapshot by convention and checksum verification; repository administration remains controlled by its owner. No automatic update, canonical write, deployment or admission is provided.
+          """
+          put('README_PROBLEM.md',readme.encode())
+          put('PROVENANCE.json',(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n').encode())
+          # Remove the one-time builder from the final tree. It never changes the source repository.
+          workflow=ROOT/'.github/workflows/build-diagnostic-snapshot.yml'
+          workflow.unlink()
+          # Abort before publishing if any selected content contains a credential value.
+          patterns=[rb'sk-[A-Za-z0-9_-]{20,}',rb'gh[pousr]_[A-Za-z0-9]{20,}',rb'github_pat_[A-Za-z0-9_]{20,}',rb'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----',rb'(?i)(?:postgres(?:ql)?|mongodb(?:\\+srv)?)://[^\\s\\\"\\\']*:[^\\s\\\"\\\']*@',rb'AKIA[0-9A-Z]{16}']
+          for p in ROOT.rglob('*'):
+              if not p.is_file() or '.git' in p.parts:continue
+              if p.name.startswith('.env'):raise RuntimeError('Forbidden configuration filename')
+              b=p.read_bytes()
+              if any(re.search(pattern,b) for pattern in patterns):raise RuntimeError('Credential-like content in selected file: '+str(p.relative_to(ROOT)))
+              if p.suffix=='.md' and re.search(rb'(?i)annoma|german-learning-app',b):raise RuntimeError('Application name in documentation: '+str(p.relative_to(ROOT)))
+          paths=sorted(p for p in ROOT.rglob('*') if p.is_file() and '.git' not in p.parts)
+          put('SNAPSHOT.sha256',(''.join(digest(p.read_bytes())+'  '+str(p.relative_to(ROOT))+'\n' for p in paths)).encode())
+          subprocess.run(['sh','REPRODUCE.sh'],check=True,stdout=subprocess.DEVNULL)
+          print(json.dumps({'sourceCommit':SHA,'copiedSourceFiles':len(FILES),'snapshotFiles':len(paths)+1,'metrics':dict(metrics),'latestFieldRepairRun':status},indent=2))
+          
+      - name: Commit frozen snapshot and remove builder
+        shell: bash
+        run: |
+          git config user.name 'diagnostic-snapshot'
+          git config user.email 'diagnostic-snapshot@users.noreply.github.com'
+          git add --all
+          git commit -m 'Freeze DE100 wire v2 diagnostic snapshot with verified provenance'
+          git push origin HEAD:main
