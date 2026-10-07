@@ -1,0 +1,197 @@
+{
+  "snapshotStatus": "INCOMPLETE_MISSING_SAVED_ARTIFACTS",
+  "sourceRepository": "railhadzhyiev-ai/german-learning-app-v2",
+  "sourceBranch": "codex/canonicalword-wire-v2-ai-pilot-v1",
+  "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+  "sourceFiles": [
+    {
+      "path": "backend/benchmark/canonicalword-ai-pilot-v1/staging-v2.mjs",
+      "sourcePath": "backend/benchmark/canonicalword-ai-pilot-v1/staging-v2.mjs",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "2999476c9fdc2b5a3364d90c73a6dde643368f07",
+      "gitBlobSha": "3341bf2e8923896436c753a7897a9dd1fc4c7af4",
+      "bytes": 5269,
+      "byteExact": true
+    },
+    {
+      "path": "backend/benchmark/canonicalword-ai-pilot-v1/replay-v2.mjs",
+      "sourcePath": "backend/benchmark/canonicalword-ai-pilot-v1/replay-v2.mjs",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "gitBlobSha": "a48954c22fc6ff7f63837be3ac61a83e6272095f",
+      "bytes": 3145,
+      "byteExact": true
+    },
+    {
+      "path": "backend/benchmark/canonicalword-ai-pilot-v1/deterministic-repair-v2.mjs",
+      "sourcePath": "backend/benchmark/canonicalword-ai-pilot-v1/deterministic-repair-v2.mjs",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "gitBlobSha": "376955fa797fb929efdf7c5fd97eb6bb6057a85e",
+      "bytes": 2817,
+      "byteExact": true
+    },
+    {
+      "path": "backend/benchmark/canonicalword-ai-pilot-v1/ai-admission-shadow-v1.mjs",
+      "sourcePath": "backend/benchmark/canonicalword-ai-pilot-v1/ai-admission-shadow-v1.mjs",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "gitBlobSha": "46afb06e5df00e893a3be8de4077968798bb6b55",
+      "bytes": 4003,
+      "byteExact": true
+    },
+    {
+      "path": "backend/benchmark/canonicalword-ai-pilot-v1/field-repair-v1.mjs",
+      "sourcePath": "backend/benchmark/canonicalword-ai-pilot-v1/field-repair-v1.mjs",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "gitBlobSha": "17fb135921493905c7b99b92d4fcbbb1964c8ebd",
+      "bytes": 5726,
+      "byteExact": true
+    },
+    {
+      "path": "backend/benchmark/canonicalword-ai-pilot-v1/input-lock.v1.json",
+      "sourcePath": "backend/benchmark/canonicalword-ai-pilot-v1/input-lock.v1.json",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "2999476c9fdc2b5a3364d90c73a6dde643368f07",
+      "gitBlobSha": "cf264d97b8a5c0c51059184207a65606b2db0af6",
+      "bytes": 3955,
+      "byteExact": true
+    },
+    {
+      "path": "backend/benchmark/canonicalword-ai-pilot-v1/pilot-input.v1.jsonl",
+      "sourcePath": "backend/benchmark/canonicalword-ai-pilot-v1/pilot-input.v1.jsonl",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "2999476c9fdc2b5a3364d90c73a6dde643368f07",
+      "gitBlobSha": "63bf6dcecfb8aaa36a2455a5cc4b789495180c30",
+      "bytes": 298646,
+      "byteExact": true
+    },
+    {
+      "path": "backend/benchmark/canonicalword-ai-pilot-v1/checksums.v1.sha256",
+      "sourcePath": "backend/benchmark/canonicalword-ai-pilot-v1/checksums.v1.sha256",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "2999476c9fdc2b5a3364d90c73a6dde643368f07",
+      "gitBlobSha": "fe2206cb0a65581e22f0cf1094be744f2cfab73d",
+      "bytes": 172,
+      "byteExact": true
+    },
+    {
+      "path": "backend/scripts/canonicalword-wire-v2-offline-replay.mjs",
+      "sourcePath": "backend/scripts/canonicalword-wire-v2-offline-replay.mjs",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "gitBlobSha": "1d0b22833bdd8ecdf1dd4e7ea506961845fa2353",
+      "bytes": 3267,
+      "byteExact": true
+    },
+    {
+      "path": "backend/scripts/canonicalword-repair-plan-v1.mjs",
+      "sourcePath": "backend/scripts/canonicalword-repair-plan-v1.mjs",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "gitBlobSha": "162bd648f76e230870728914f83577247d18935f",
+      "bytes": 7517,
+      "byteExact": true
+    },
+    {
+      "path": "backend/scripts/ai-admission-shadow-v1.mjs",
+      "sourcePath": "backend/scripts/ai-admission-shadow-v1.mjs",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "gitBlobSha": "63b97fb8b335473c5879e2b8b39977617e2c4a49",
+      "bytes": 4621,
+      "byteExact": true
+    },
+    {
+      "path": "backend/test/canonicalword-replay-v2.test.mjs",
+      "sourcePath": "backend/test/canonicalword-replay-v2.test.mjs",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "gitBlobSha": "08184c0182f9060076c00786181eb509e2546dc4",
+      "bytes": 2560,
+      "byteExact": true
+    },
+    {
+      "path": "backend/test/deterministic-repair-v2.test.mjs",
+      "sourcePath": "backend/test/deterministic-repair-v2.test.mjs",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "gitBlobSha": "7e5c549e18cf5103fb3796a20ef3028cb3950048",
+      "bytes": 2656,
+      "byteExact": true
+    },
+    {
+      "path": "backend/test/ai-admission-shadow-v1.test.mjs",
+      "sourcePath": "backend/test/ai-admission-shadow-v1.test.mjs",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "gitBlobSha": "3342b2930f87a4d9934b042001eee7c4679cff92",
+      "bytes": 2605,
+      "byteExact": true
+    },
+    {
+      "path": "backend/test/field-repair-v1.test.mjs",
+      "sourcePath": "backend/test/field-repair-v1.test.mjs",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "gitBlobSha": "b88fd21ed3992d03c84b83bbce6fe4ad31978f1c",
+      "bytes": 2068,
+      "byteExact": true
+    },
+    {
+      "path": "lib/features/words/data/canonical_word_contract.dart",
+      "sourcePath": "lib/features/words/data/canonical_word_contract.dart",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "dabf8d8a8df9b0e64867468942581d1bb5d7f59f",
+      "gitBlobSha": "63a312b414f1fcc418c084e2fd661b88ee6e827e",
+      "bytes": 6960,
+      "byteExact": true
+    },
+    {
+      "path": "lib/features/words/domain/canonical_word.dart",
+      "sourcePath": "lib/features/words/domain/canonical_word.dart",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "2999476c9fdc2b5a3364d90c73a6dde643368f07",
+      "gitBlobSha": "f204f79719333cc3db06d73e856f1bd8e4525ff6",
+      "bytes": 6327,
+      "byteExact": true
+    },
+    {
+      "path": "lib/features/words/domain/grammatical_gender.dart",
+      "sourcePath": "lib/features/words/domain/grammatical_gender.dart",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "c9650c697f781ca0c243fe662896a6525b6a7cc5",
+      "gitBlobSha": "07fc95cf31ac3d0f5b65b03e7b0c1772896de34b",
+      "bytes": 975,
+      "byteExact": true
+    },
+    {
+      "path": "docs/AI_ADMISSION_SHADOW_V1.md",
+      "sourcePath": "docs/AI_ADMISSION_SHADOW_V1.md",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "gitBlobSha": "fc2e9e2611def4d9dbfb1897753eb18a62a61636",
+      "bytes": 1924,
+      "byteExact": true
+    },
+    {
+      "path": "docs/CANONICALWORD_WIRE_V2_AI_PILOT.md",
+      "sourcePath": "docs/CANONICALWORD_WIRE_V2_AI_PILOT.md",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "2999476c9fdc2b5a3364d90c73a6dde643368f07",
+      "gitBlobSha": "1b6d4810c004bb8ac451ba6a33ce4f9a97754e29",
+      "bytes": 1988,
+      "byteExact": true
+    },
+    {
+      "path": "docs/CANONICALWORD_FIELD_REPAIR_V1.md",
+      "sourcePath": "docs/CANONICALWORD_FIELD_REPAIR_V1.md",
+      "sourceCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "lastChangeCommitSha": "bc4a3da6045daa3314f6c02fb0b955dfd41b570c",
+      "gitBlobSha": "135c1d72afcd316dcb7b0230c3777a96887ed035",
+      "bytes": 1720,
+      "byteExact": true
+    }
+  ]
+}
